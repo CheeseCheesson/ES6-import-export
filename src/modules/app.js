@@ -1,5 +1,8 @@
+import DonateForm from "../modules/donate-form";
+
 export default class App {
+  #donate = new DonateForm();
   run() {
-      document.body.textContent = 'Hello World'
+    document.body.append(this.#donate.render());
   }
 }
