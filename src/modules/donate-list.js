@@ -26,7 +26,7 @@ export default class DonateList {
         tagBDonats.textContent = `${item.amount}`;
 
       donateItemHTML.append(tagBDonats);
-      donatesSubContaimer.append(donateItemHTML);
+      donatesSubContainer.append(donateItemHTML);
     });
 
     this.#donatesContainerHTML.append(h2DonatesTitle, donatesSubContainer);

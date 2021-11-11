@@ -2,13 +2,12 @@ export default class DonateForm {
   #donateFormHTML;
   #totalAmount;
 
-
   constructor(totalAmount, createNewDonate) {
     this.#donateFormHTML = document.createElement("form");
     this.#donateFormHTML.className = "donate-form";
     this.#totalAmount = totalAmount;
-    this.createNewDonate = createNewDonate
-  } 
+    this.createNewDonate = createNewDonate;
+  }
 
   #updateTotalAmount(newAmount) {
     return `${newAmount}$`;
@@ -40,8 +39,14 @@ export default class DonateForm {
       labelDialAmount,
       buttonDonateForm
     );
-
+    this.#donateFormHTML.addEventListener("submit", (e) => {
+      const donate = {
+        date,
+        amount,
+      };
+      this.createNewDonate.bind(this);
+      subInputDialAmount.value = "";
+    });
     return this.#donateFormHTML;
   }
-
 }
