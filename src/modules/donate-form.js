@@ -1,52 +1,67 @@
+import { Settings as settings} from '../core/constants/settings';
+
 export default class DonateForm {
-  #donateFormHTML;
+  #formHTML;
+  #totalAmountContent;
+  #labelForInput;
+  #inputForm;
+  #buttonForm;
   #totalAmount;
-
   constructor(totalAmount, createNewDonate) {
-    this.#donateFormHTML = document.createElement("form");
-    this.#donateFormHTML.className = "donate-form";
-    this.#totalAmount = totalAmount;
-    this.createNewDonate = createNewDonate;
-  }
+    this.#totalAmount = totalAmount; // this.state.totalAmount
+    this.createNewDonate = createNewDonate; // new
 
-  #updateTotalAmount(newAmount) {
-    return `${newAmount}$`;
-  }
-  render() {
-    const totalAmountHTML = document.createElement("h1");
-    totalAmountHTML.id = "total-amount";
-    totalAmountHTML.textContent = this.#updateTotalAmount(0);
+    this.#formHTML = document.createElement("form");
+    this.#formHTML.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-    const labelDialAmount = document.createElement("label");
-    labelDialAmount.className = "donate-form__input-label";
-    labelDialAmount.textContent = "Введите сумму в $";
-    const subInputDialAmount = document.createElement("input");
-    subInputDialAmount.className = "donate-form__donate-input";
-    subInputDialAmount.setAttribute("name", "amount");
-    subInputDialAmount.type = "number";
-    subInputDialAmount.max = "100";
-    subInputDialAmount.min = "0";
-    subInputDialAmount.setAttribute("required", "");
-    labelDialAmount.append(subInputDialAmount);
-
-    const buttonDonateForm = document.createElement("button");
-    buttonDonateForm.className = "donate-form__submit-button";
-    buttonDonateForm.type = "submit";
-    buttonDonateForm.textContent = "Задонатить";
-
-    this.#donateFormHTML.append(
-      totalAmountHTML,
-      labelDialAmount,
-      buttonDonateForm
-    );
-    this.#donateFormHTML.addEventListener("submit", (e) => {
-      const donate = {
-        date,
-        amount,
+      this.newDonate = {
+        date: new Date(),
+        amount: event.path[0][0].value,
       };
-      this.createNewDonate.bind(this);
-      subInputDialAmount.value = "";
+
+      this.createNewDonate(this.newDonate.amount);
+      
+      document.querySelector(".donate-form__donate-input").value = "";
     });
-    return this.#donateFormHTML;
+    this.#totalAmountContent = document.createElement("h2");
+    this.#labelForInput = document.createElement("label");
+    this.#inputForm = document.createElement("input");
+    this.#buttonForm = document.createElement("button");
+  }
+  updateTotalAmount(newAmount) {
+    console.log(newAmount);
+    // this.#totalAmountContent.textContent = this.updateTotalAmount(this.#totalAmount); //   0
+    return (this.#totalAmountContent.textContent = `${newAmount}${settings.currency}`); // 0
+  }
+
+  render() {
+    this.#formHTML.className = "donate-form";
+    this.#totalAmountContent.id = "total-amount";
+    this.#totalAmountContent.textContent = this.updateTotalAmount(
+      this.#totalAmount
+    ); // totalAmount 0 по умолчанию, потом посчитаем функцией
+
+    this.#labelForInput.className = "donate-form__input-label";
+    this.#labelForInput.textContent = `Введите сумму в ${settings.currency}`;
+    this.#inputForm.className = "donate-form__donate-input";
+    this.#inputForm.name = "amount";
+    this.#inputForm.type = "number";
+    this.#inputForm.max = "100";
+    this.#inputForm.min = "0";
+    this.#inputForm.setAttribute("required", "");
+
+    this.#labelForInput.append(this.#inputForm);
+
+    this.#buttonForm.className = "donate-form__submit-button";
+    this.#buttonForm.type = "submit";
+    this.#buttonForm.textContent = "Задонатить";
+    this.#formHTML.append(
+      this.#totalAmountContent,
+      this.#labelForInput,
+      this.#buttonForm
+    );
+
+    return this.#formHTML;
   }
 }

@@ -1,26 +1,47 @@
-import DonateForm from "../modules/donate-form";
-import DonateList from "../modules/donate-list";
-import { mockDonates } from "../core/mockDanats";
-import { state } from "../core/state";
+import DonateForm from "./donate-form";
+import DonateList from "./donate-list";
+import * as Utils from "../core/utils";
+
+const mockDonates = [
+  { amount: 4, date: new Date() },
+  { amount: 20, date: new Date() },
+  { amount: 3, date: new Date() },
+  { amount: 1, date: new Date() },
+];
 
 export default class App {
-  #donate = new DonateForm(state.totalAmount, this.createNewDonate);
-  #donateList = new DonateList(mockDonates, state.donates);
+  #donateForm;
+  #donateList;
   #state;
-  constructor(state) {
-    this.#state = state;
+
+  constructor() {
+    this.#state = {
+      donates: mockDonates.map((item) => item.amount), // для DonatList
+      totalAmount: Utils.calculateSumOfNumbers(mockDonates.map((item) => item.amount)), // для DonateForm
+    };
+
+
+    this.#donateForm = new DonateForm(
+      this.#state.totalAmount,
+      this.createNewDonate.bind(this)
+    );
+
+    this.#donateList = new DonateList(this.#state.donates);
   }
   createNewDonate(newDonate) {
-    this.#state.donates = newDonate;
-    const newTotalAmount = this.#state.donates.reduce((acc, item) => {
-      return acc + item;
+    console.log("newDonate", newDonate);
+
+    this.#state.donates.push(newDonate);
+
+    this.#state.totalAmount = +this.#state.donates.reduce((acc, item) => {
+      return acc + +item;
     }, 0);
-    this.#state.totalAmount = newTotalAmount;
-    this.#donateList.updateDonates()
-    this.#donate.updateTotalAmount()
+
+    this.#donateList.updateDonates(this.#state.donates);
+    this.#donateForm.updateTotalAmount(this.#state.totalAmount);
   }
+
   run() {
-    document.body.append(this.#donate.render(), this.#donateList.render());
+    document.body.append(this.#donateForm.render(), this.#donateList.render());
   }
-  
 }

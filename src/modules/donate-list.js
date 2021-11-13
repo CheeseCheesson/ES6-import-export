@@ -1,46 +1,48 @@
+import { Settings as settings} from '../core/constants/settings';
+import {getFormattedTime} from "../core/utils";
+
 export default class DonateList {
   #donates;
-  #donatesContainerHTML;
+  #mainContainer;
+  #headerTitle;
+  #subContainer;
+  #donateItem;
 
   constructor(donates) {
-    //приняли массив объектов: ключи date (дата создания доната) и amount (сумма доната)
-    this.#donates = donates;
-    this.#donatesContainerHTML = document.createElement("div");
-    this.#donatesContainerHTML.className = "donates-container";
+    this.#donates = donates; // this.state = {donates: []}  this.#donates
+    this.#mainContainer = document.createElement("div");
+    this.#headerTitle = document.createElement("h2");
+    this.#subContainer = document.createElement("div");
+
   }
 
   render() {
-    const h2DonatesTitle = document.createElement("h2");
-    h2DonatesTitle.className = "donates-container__title";
-    h2DonatesTitle.textContent = "Список донатов";
+    this.#mainContainer.className = "donates-container";
 
-    let donatesSubContainer = document.createElement("div");
-    donatesSubContainer.className = "donates-container__donates";
+    this.#headerTitle.className = "donates-container__title";
+    this.#headerTitle.textContent = "Список донатов";
 
-    this.#donates.map((item) => {
-      const donateItemHTML = document.createElement("div");
-      donateItemHTML.className = "donate-item";
-      donateItemHTML.textContent = `${item.date} - `;
+    this.#subContainer.className = "donates-container__donates";
 
-        const tagBDonats = document.createElement("b");
-        tagBDonats.textContent = `${item.amount}`;
+    this.updateDonates(this.#donates) 
 
-      donateItemHTML.append(tagBDonats);
-      donatesSubContainer.append(donateItemHTML);
-    });
-
-    this.#donatesContainerHTML.append(h2DonatesTitle, donatesSubContainer);
-
-    return this.#donatesContainerHTML;
+    this.#mainContainer.append(
+      this.#headerTitle,
+      this.#headerTitle,
+      this.#subContainer
+    );
+    return this.#mainContainer;
   }
-  #updateDonates(updatedDonates) {
-    donatesSubContainer = document.querySelector(".donates-container__donates");
-    donatesSubContainer.innerHTML = "";
-    updatedDonates.forEach((updatedDonate) => {
-      const tagBDonats = document.createElement("b");
-      tagBDonats.textContent = `${updatedDonate}`;
-      donatesSubContainer.append(tagBDonats)
+
+  updateDonates(updatedDonates) {
+    // this.state = {donates: []}  this.#donates
+    this.#subContainer.innerHTML = ``;
+    updatedDonates.forEach((item) => {
+      this.#donateItem = document.createElement("div"); // это нужно отрисовывать каждый раз
+      this.#donateItem.className = "donate-item";
+      this.#donateItem.innerHTML = `${getFormattedTime(new Date())} - <b>${item}${settings.currency}</b>`;
+      this.#subContainer.append(this.#donateItem);
     });
-    return donatesSubContainer
+
   }
 }
