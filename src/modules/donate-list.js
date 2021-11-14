@@ -23,8 +23,14 @@ export default class DonateList {
     this.#headerTitle.textContent = "Список донатов";
 
     this.#subContainer.className = "donates-container__donates";
+    this.#donates.forEach(item => {
+      
+      this.#donateItem = document.createElement("div"); // это нужно отрисовывать каждый раз
+      this.#donateItem.className = "donate-item";
+      this.#donateItem.innerHTML = `${getFormattedTime(new Date())} - <b>${item}${settings.currency}</b>`;
+      this.#subContainer.append(this.#donateItem);
+    })
 
-    this.updateDonates(this.#donates) 
 
     this.#mainContainer.append(
       this.#headerTitle,
@@ -36,13 +42,14 @@ export default class DonateList {
 
   updateDonates(updatedDonates) {
     // this.state = {donates: []}  this.#donates
-    this.#subContainer.innerHTML = ``;
+    // this.#subContainer.innerHTML = ``;
+
     updatedDonates.forEach((item) => {
+
       this.#donateItem = document.createElement("div"); // это нужно отрисовывать каждый раз
       this.#donateItem.className = "donate-item";
-      this.#donateItem.innerHTML = `${getFormattedTime(new Date())} - <b>${item}${settings.currency}</b>`;
+      this.#donateItem.innerHTML = `${item.date} - <b>${item.amount}${settings.currency}</b>`;
       this.#subContainer.append(this.#donateItem);
     });
-
   }
 }

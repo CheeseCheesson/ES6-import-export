@@ -1,5 +1,5 @@
 import { Settings as settings} from '../core/constants/settings';
-
+import { getFormattedTime } from '../core/utils/index'
 export default class DonateForm {
   #formHTML;
   #totalAmountContent;
@@ -12,31 +12,31 @@ export default class DonateForm {
     this.createNewDonate = createNewDonate; // new
 
     this.#formHTML = document.createElement("form");
-    this.#formHTML.addEventListener("submit", (event) => {
-      event.preventDefault();
 
-      this.newDonate = {
-        date: new Date(),
-        amount: event.path[0][0].value,
-      };
-
-      this.createNewDonate(this.newDonate.amount);
-      
-      document.querySelector(".donate-form__donate-input").value = "";
-    });
     this.#totalAmountContent = document.createElement("h2");
     this.#labelForInput = document.createElement("label");
     this.#inputForm = document.createElement("input");
     this.#buttonForm = document.createElement("button");
   }
   updateTotalAmount(newAmount) {
-    console.log(newAmount);
     // this.#totalAmountContent.textContent = this.updateTotalAmount(this.#totalAmount); //   0
     return (this.#totalAmountContent.textContent = `${newAmount}${settings.currency}`); // 0
   }
 
   render() {
     this.#formHTML.className = "donate-form";
+    this.#formHTML.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      this.newDonate = [{
+        date: getFormattedTime(new Date()),
+        amount: event.path[0][0].value,
+      }];
+
+      this.createNewDonate(this.newDonate);
+      
+      document.querySelector(".donate-form__donate-input").value = "";
+    });
     this.#totalAmountContent.id = "total-amount";
     this.#totalAmountContent.textContent = this.updateTotalAmount(
       this.#totalAmount

@@ -17,9 +17,10 @@ export default class App {
   constructor() {
     this.#state = {
       donates: mockDonates.map((item) => item.amount), // для DonatList
-      totalAmount: Utils.calculateSumOfNumbers(mockDonates.map((item) => item.amount)), // для DonateForm
+      totalAmount: Utils.calculateSumOfNumbers(
+        mockDonates.map((item) => item.amount)
+      ), // для DonateForm
     };
-
 
     this.#donateForm = new DonateForm(
       this.#state.totalAmount,
@@ -29,15 +30,15 @@ export default class App {
     this.#donateList = new DonateList(this.#state.donates);
   }
   createNewDonate(newDonate) {
-    console.log("newDonate", newDonate);
 
-    this.#state.donates.push(newDonate);
-
+    newDonate.forEach((newItem) => {
+      this.#state.donates.push(newItem.amount);
+    });
     this.#state.totalAmount = +this.#state.donates.reduce((acc, item) => {
       return acc + +item;
     }, 0);
 
-    this.#donateList.updateDonates(this.#state.donates);
+    this.#donateList.updateDonates(newDonate);
     this.#donateForm.updateTotalAmount(this.#state.totalAmount);
   }
 
