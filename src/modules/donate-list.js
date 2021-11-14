@@ -1,5 +1,5 @@
-import { Settings as settings} from '../core/constants/settings';
-import {getFormattedTime} from "../core/utils";
+import { Settings as settings } from "../core/constants/settings";
+import { getFormattedTime } from "../core/utils";
 
 export default class DonateList {
   #donates;
@@ -9,11 +9,10 @@ export default class DonateList {
   #donateItem;
 
   constructor(donates) {
-    this.#donates = donates; // this.state = {donates: []}  this.#donates
+    this.#donates = donates;
     this.#mainContainer = document.createElement("div");
     this.#headerTitle = document.createElement("h2");
     this.#subContainer = document.createElement("div");
-
   }
 
   render() {
@@ -23,14 +22,14 @@ export default class DonateList {
     this.#headerTitle.textContent = "Список донатов";
 
     this.#subContainer.className = "donates-container__donates";
-    this.#donates.forEach(item => {
-      
-      this.#donateItem = document.createElement("div"); // это нужно отрисовывать каждый раз
+    this.#donates.forEach((item) => {
+      this.#donateItem = document.createElement("div");
       this.#donateItem.className = "donate-item";
-      this.#donateItem.innerHTML = `${getFormattedTime(new Date())} - <b>${item}${settings.currency}</b>`;
+      this.#donateItem.innerHTML = `${getFormattedTime(
+        new Date()
+      )} - <b>${item}${settings.currency}</b>`;
       this.#subContainer.append(this.#donateItem);
-    })
-
+    });
 
     this.#mainContainer.append(
       this.#headerTitle,
@@ -41,12 +40,11 @@ export default class DonateList {
   }
 
   updateDonates(updatedDonates) {
-    // this.state = {donates: []}  this.#donates
-    // this.#subContainer.innerHTML = ``;
+    
+    // this.#subContainer.innerHTML = ``; //! чистит контейнер!!!!!!!!!!!
 
     updatedDonates.forEach((item) => {
-
-      this.#donateItem = document.createElement("div"); // это нужно отрисовывать каждый раз
+      this.#donateItem = document.createElement("div");
       this.#donateItem.className = "donate-item";
       this.#donateItem.innerHTML = `${item.date} - <b>${item.amount}${settings.currency}</b>`;
       this.#subContainer.append(this.#donateItem);
